@@ -34,8 +34,13 @@ export default {
   methods: {
     onDecode(decodedString) {
       // ...
-      console.log(decodedString);
       this.scan = false;
+      // console.log(decodedString);
+      if (this.isValidHttpUrl(decodedString)) {
+        window.open(decodedString, "_self");
+      } else {
+        alert("Invalid QR Code");
+      }
     },
     async onInit(promise) {
       try {
@@ -60,6 +65,15 @@ export default {
           this.error = `ERROR: Camera error (${error.name})`;
         }
       }
+    },
+    isValidHttpUrl(string) {
+      let url;
+      try {
+        url = new URL(string);
+      } catch (_) {
+        return false;
+      }
+      return url.protocol === "http:" || url.protocol === "https:";
     },
   },
 };
