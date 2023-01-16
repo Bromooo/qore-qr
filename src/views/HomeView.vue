@@ -1,9 +1,8 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
     <button @click="scan = !scan">Scan</button>
-    <p>{{ error }}</p>
+    <button @click="logout">Logout</button>
+    <p v-if="error.length" class="err">{{ error }}</p>
     <qrcode-stream
       v-if="scan"
       @init="onInit"
@@ -75,6 +74,17 @@ export default {
       }
       return url.protocol === "http:" || url.protocol === "https:";
     },
+    logout() {
+      this.$store.dispatch("logout").then(() => {
+        location.href = "/login";
+      });
+    },
   },
 };
 </script>
+<style scoped>
+.err {
+  color: red;
+  font-weight: 500;
+}
+</style>
