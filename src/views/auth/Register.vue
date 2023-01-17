@@ -3,6 +3,24 @@
     <h4 class="mb-3">Sign In</h4>
     <form @submit.prevent="submit">
       <div class="form-group">
+        <label for="fname">First Name</label>
+        <input
+          type="text"
+          id="fname"
+          class="form-control shadow-none"
+          placeholder="John"
+        />
+      </div>
+      <div class="form-group">
+        <label for="lname">Last Name</label>
+        <input
+          type="text"
+          id="lname"
+          class="form-control shadow-none"
+          placeholder="Doe"
+        />
+      </div>
+      <div class="form-group">
         <label for="email">Email Address</label>
         <input
           type="text"
@@ -57,17 +75,11 @@ export default {
 
       console.log(payload);
 
-      localStorage.setItem("token", "Yogee");
-      console.log("/" + this.$store.getters.redirect);
-      setTimeout(() => {
-        this.$store.commit("redir");
-        if (this.$store.getters.redirect) {
-          localStorage.removeItem("re");
-          window.location.href = "/" + this.$store.getters.redirect;
-        } else {
-          window.location.href = "/";
-        }
-      }, 1000);
+      // localStorage.setItem("token", "Yogee");
+      // setTimeout(() => {
+      //   // this.$router.push("/");
+      //   window.location.href = "/";
+      // }, 1000);
     },
   },
 };
