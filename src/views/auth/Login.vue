@@ -1,5 +1,5 @@
 <template>
-  <div class="hld">
+  <div class="hld auth">
     <h4 class="mb-3">Sign In</h4>
     <form @submit.prevent="submit">
       <div class="form-group">

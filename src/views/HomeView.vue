@@ -1,13 +1,13 @@
 <template>
-  <div class="home">
-    <button @click="scan = !scan">Scan</button>
-    <button @click="logout">Logout</button>
+  <div class="home hld">
+    <div class="btns">
+      <button class="btn btn-primary" @click="scan = !scan">Scan</button>
+      <button class="btn btn-danger" @click="logout">Logout</button>
+    </div>
     <p v-if="error.length" class="err">{{ error }}</p>
-    <qrcode-stream
-      v-if="scan"
-      @init="onInit"
-      @decode="onDecode"
-    ></qrcode-stream>
+    <div class="w-100 mt-4" v-if="scan">
+      <qrcode-stream @init="onInit" @decode="onDecode"></qrcode-stream>
+    </div>
   </div>
 </template>
 
@@ -82,9 +82,18 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .err {
   color: red;
   font-weight: 500;
+}
+.btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  button {
+    width: 49%;
+  }
 }
 </style>

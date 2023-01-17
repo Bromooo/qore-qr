@@ -5,8 +5,8 @@
       <router-link to="/about">About</router-link>
     </nav> -->
     <div class="bod">
-        <router-view />
-      </div>
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -44,9 +44,9 @@ nav a.router-link-exact-active {
     padding: 16px;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 1px 1px 10px #555;
-    /* &.auth{
-    } */
+    &.auth {
+      box-shadow: 1px 1px 10px #555;
+    }
   }
 }
 </style>
