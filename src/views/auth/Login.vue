@@ -31,6 +31,9 @@
         />
       </div>
     </form>
+    <p class="redir">
+      Don't have an account? <router-link to="register">Sign Up</router-link>
+    </p>
   </div>
 </template>
 
@@ -74,4 +77,9 @@ export default {
 </script>
 
 <style>
+p.redir {
+  margin: 0;
+  margin-top: 12px;
+  font-size: .9rem;
+}
 </style>

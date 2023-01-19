@@ -49,4 +49,9 @@ nav a.router-link-exact-active {
     }
   }
 }
+p.err {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: red;
+}
 </style>
