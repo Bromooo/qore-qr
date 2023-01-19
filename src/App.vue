@@ -44,14 +44,17 @@ nav a.router-link-exact-active {
     padding: 16px;
     background-color: #fff;
     border-radius: 8px;
-    &.auth {
+    /* &.auth {
       box-shadow: 1px 1px 10px #555;
-    }
+    } */
   }
 }
 p.err {
   font-size: 0.9rem;
   font-weight: 500;
   color: red;
+}
+input[type="submit"]:disabled {
+  cursor: not-allowed;
 }
 </style>

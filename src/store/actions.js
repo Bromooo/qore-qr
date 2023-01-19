@@ -16,6 +16,21 @@ export const actions = {
         });
     });
   },
+  verify({ commit, dispatch, getters }, token) {
+    return new Promise((resolve, reject) => {
+      axios({
+        url: '/users/confirm?emailToken=' + token,
+        method: "GET"
+      })
+        .then(resp => {
+          resolve(resp);
+        })
+        .catch(err => {
+          localStorage.removeItem("token");
+          reject(err);
+        });
+    });
+  },
   logout({ commit }) {
     commit("logout");
     localStorage.removeItem("token");

@@ -34,6 +34,11 @@ const routes = [
     path: '/register',
     name: 'register',
     component: () => import('@/views/auth/Register')
+  },
+  {
+    path: '/verify/:emailToken',
+    name: 'verify',
+    component: () => import('@/views/auth/Verify')
   }
 ]
 
@@ -66,7 +71,7 @@ router.beforeEach((to, from, next) => {
       next();
     }
   } else {
-    if (to.path === "/login" && store.getters.isLoggedIn) {
+    if ((to.path === "/login" || to.path === "/register") && store.getters.isLoggedIn) {
       next('/'); // make sure to always call next()!
     } else {
       next(); // make sure to always call next()!

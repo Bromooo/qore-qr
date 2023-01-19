@@ -54,23 +54,58 @@ export default {
   methods: {
     submit() {
       var payload = {
-        email: this.email,
-        password: this.password,
+        path: "/users/login",
+        data: {
+          email: this.email,
+          password: this.password,
+        },
       };
 
-      console.log(payload);
+      this.$store
+        .dispatch("authRequest", payload)
+        .then((resp) => {
+          // console.log(resp.data.message);
+          this.$toast.success(
+            "Login",
+            resp.data.message,
+            this.$toastPosition
+          );
+          console.log(resp.data);
+          localStorage.setItem("token", resp.data.token);
+          localStorage.setItem("user", resp.data.userId);
+          // this.$store.commit("token");
+          // this.$store.commit("user");
 
-      localStorage.setItem("token", "Yogee");
-      console.log("/" + this.$store.getters.redirect);
-      setTimeout(() => {
-        this.$store.commit("redir");
-        if (this.$store.getters.redirect) {
-          localStorage.removeItem("re");
-          window.location.href = "/" + this.$store.getters.redirect;
-        } else {
-          window.location.href = "/";
-        }
-      }, 1000);
+          // console.log("/" + this.$store.getters.redirect);
+          // return;
+          setTimeout(() => {
+            this.$store.commit("redir");
+            if (this.$store.getters.redirect) {
+              localStorage.removeItem("re");
+              window.location.href = "/" + this.$store.getters.redirect;
+            } else {
+              window.location.href = "/";
+            }
+          }, 1000);
+        })
+        .catch((err) => {
+          if (err.response) {
+            this.$toast.error(
+              "Login",
+              err.response.data.error.message,
+              this.$toastPosition
+            );
+          } else {
+            console.log(err);
+            this.$toast.error(
+              "Login",
+              "Something went wrong",
+              this.$toastPosition
+            );
+          }
+        });
+
+      // console.log(payload);
     },
   },
 };
@@ -80,6 +115,6 @@ export default {
 p.redir {
   margin: 0;
   margin-top: 12px;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="hld auth">
-    <h4 class="mb-3">Sign In</h4>
+    <h4 class="mb-3">Sign Up</h4>
     <form @submit.prevent="submit">
       <div class="form-group mt-3">
         <label for="fname">First Name</label>
@@ -41,6 +41,10 @@
           class="form-control shadow-none"
           v-model="password"
         />
+        <p v-if="password.length && !password.match(passwordRegex)" class="err">
+          Passwords must be up to 8 characters and must include numbers and
+          special characters between !@#$%^&
+        </p>
       </div>
       <div class="form-group mt-3">
         <label for="cpasw">Confirm Password</label>
@@ -51,7 +55,9 @@
           class="form-control shadow-none"
           v-model="cpassword"
         />
-        <p v-if="cpassword.length && cpassword !== password" class="err">Passwords must match</p>
+        <p v-if="cpassword.length && cpassword !== password" class="err">
+          Passwords must match
+        </p>
       </div>
       <div class="form-group mt-4">
         <input
@@ -77,14 +83,17 @@ export default {
       email: "",
       password: "",
       cpassword: "",
+      passwordRegex: /^(?=.*[a-zA-Z])(?=.*[\d])(?=.*[!@#$%^&*.,])(?=.{8,})/,
     };
   },
   computed: {
     valid() {
       var validRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+      var passwordRegex =
+        /^(?=.*[a-zA-Z])(?=.*[\d])(?=.*[!@#$%^&*.,])(?=.{8,})/;
       return (
         this.email.match(validRegex) &&
-        this.password.length < 8 &&
+        this.password.match(passwordRegex) &&
         // this.cpassword.length &&
         this.fname.length &&
         this.lname.length &&
@@ -94,12 +103,55 @@ export default {
   },
   methods: {
     submit() {
-      var payload = {
-        email: this.email,
-        password: this.password,
-      };
+      if (this.valid) {
+        var payload = {
+          path: "/users/signup",
+          data: {
+            firstname: this.fname,
+            lastname: this.lname,
+            email: this.email,
+            password: this.password,
+          },
+        };
 
-      console.log(payload);
+        // console.log(payload);
+        // return;
+        this.$store
+          .dispatch("authRequest", payload)
+          .then((resp) => {
+            // console.log(resp.data.message);
+            this.$toast.success(
+              "Sign Up",
+              resp.data.message + ". Kindly check your mail to confirm before proceeding to login",
+              this.$toastPosition
+            );
+            setTimeout(() => {
+              this.$router.push("/login");
+            }, 1000);
+          })
+          .catch((err) => {
+            // console.log(err);
+            if (err.response) {
+              this.$toast.error(
+                "Sign Up",
+                err.response.data.error.message,
+                this.$toastPosition
+              );
+            } else {
+              this.$toast.error(
+                "Sign Up",
+                "Something went wrong",
+                this.$toastPosition
+              );
+            }
+          });
+      } else {
+        this.$toast.error(
+          "Sign Up",
+          "Details not complete",
+          this.$toastPosition
+        );
+      }
 
       // localStorage.setItem("token", "Yogee");
       // setTimeout(() => {
