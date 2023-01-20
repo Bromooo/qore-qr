@@ -6,7 +6,4 @@ export const mutations = {
   redir(state) {
     state.redirect = localStorage.getItem("re");
   },
-  user(state) {
-    state.userId = localStorage.getItem("user");
-  },
 }
