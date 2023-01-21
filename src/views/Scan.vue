@@ -6,13 +6,41 @@
     </div>
   </div>
   <div v-else class="about">
-    <div class="success-checkmark">
+    <div class="success-checkmark" v-if="success">
       <div class="check-icon">
         <span class="icon-line line-tip"></span>
         <span class="icon-line line-long"></span>
         <div class="icon-circle"></div>
         <div class="icon-fix"></div>
       </div>
+    </div>
+    <div v-else>
+      <form @submit.prevent="logScan">
+        <div class="form-group">
+          <label for="loc">Select Location</label>
+          <select
+            class="form-select form-control shadow-none outline-none w-100"
+            id="loc"
+            v-model="destination"
+          >
+            <option value="" selected disabled>SELECT</option>
+            <option
+              v-for="(destination, index) in destinations"
+              :key="index"
+              :value="destination._id"
+            >
+              {{ destination.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group mt-4">
+          <input
+            type="submit"
+            value="Confirm Destination"
+            class="btn btn-primary w-100"
+          />
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -21,19 +49,69 @@ export default {
   data() {
     return {
       loading: true,
+      success: false,
+      destinations: [],
+      destination: "",
     };
   },
   mounted() {
-    setTimeout(() => {
-      this.loading = false;
-      setTimeout(() => {
-        this.$router.push("/");
-      }, 2000);
-    }, 3000);
+    this.$store
+      .dispatch("getRequest", "/destinations")
+      .then((resp) => {
+        // console.log(resp);
+        this.destinations = resp.data.destinations;
+        this.loading = false;
+      })
+      .catch((err) => {
+        if (err.message) {
+          this.$toast.error("Scan", err.message, this.$toastPosition);
+          this.$toast.info("Scan", "Trying again", this.$toastPosition);
+          location.reload();
+        } else if (err.response) {
+          this.$toast.error(
+            "Scan",
+            err.response.data.error.message,
+            this.$toastPosition
+          );
+          this.$router.push("/");
+        } else {
+          this.$toast.error(
+            "Scan",
+            "Something went wrong",
+            this.$toastPosition
+          );
+          this.$router.push("/");
+        }
+      });
+    // setTimeout(() => {
+    //   this.loading = false;
+    //   setTimeout(() => {
+    //     this.$router.push("/");
+    //   }, 2000);
+    // }, 3000);
+  },
+  methods: {
+    logScan() {
+      if (this.destination) {
+        var payload = {
+          path: `destinations/${this.destination}/scan`,
+        };
+        console.log(payload);
+      } else {
+        this.$toast.info(
+          "Scan",
+          "Please select destination",
+          this.$toastPosition
+        );
+      }
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
+form {
+  width: 350px;
+}
 @keyframes lod1 {
   0% {
     transform: scale(0);

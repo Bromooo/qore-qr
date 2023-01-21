@@ -17,6 +17,7 @@ export const actions = {
     });
   },
   verify({ commit, dispatch, getters }, token) {
+
     return new Promise((resolve, reject) => {
       axios({
         url: '/users/confirm?emailToken=' + token,
@@ -27,6 +28,43 @@ export const actions = {
         })
         .catch(err => {
           localStorage.removeItem("token");
+          reject(err);
+        });
+    });
+  },
+  getRequest({ commit, dispatch, getters }, path) {
+    return new Promise((resolve, reject) => {
+      const token = getters.token;
+      axios({
+        url: path,
+        method: "GET",
+        headers: {
+          Authorization: `bearer ${token}`
+        }
+      })
+        .then(resp => {
+          resolve(resp);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  },
+  postRequest({ commit, dispatch, getters }, payload) {
+    return new Promise((resolve, reject) => {
+      const token = getters.token;
+      axios({
+        url: payload.path,
+        data: payload.data,
+        method: "POST",
+        headers: {
+          Authorization: `bearer ${token}`
+        }
+      })
+        .then(resp => {
+          resolve(resp);
+        })
+        .catch(err => {
           reject(err);
         });
     });
