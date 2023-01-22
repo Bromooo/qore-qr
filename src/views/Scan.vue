@@ -6,12 +6,14 @@
     </div>
   </div>
   <div v-else class="about">
-    <div class="success-checkmark" v-if="success">
-      <div class="check-icon">
-        <span class="icon-line line-tip"></span>
-        <span class="icon-line line-long"></span>
-        <div class="icon-circle"></div>
-        <div class="icon-fix"></div>
+    <div class="succ" v-if="success">
+      <div class="success-checkmark">
+        <div class="check-icon">
+          <span class="icon-line line-tip"></span>
+          <span class="icon-line line-long"></span>
+          <div class="icon-circle"></div>
+          <div class="icon-fix"></div>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -96,7 +98,43 @@ export default {
         var payload = {
           path: `destinations/${this.destination}/scan`,
         };
-        console.log(payload);
+        this.loading = true;
+        this.$store
+          .dispatch("postRequest", payload)
+          .then((resp) => {
+            this.$toast.success(
+              "Scan",
+              "Authenticated Successfully!",
+              this.$toastPosition
+            );
+            // console.log(resp);
+            this.loading = false;
+            this.success = true;
+            setTimeout(() => {
+              this.$router.push("/");
+            }, 5000);
+          })
+          .catch((err) => {
+            if (err.response) {
+              this.$toast.error(
+                "Scan",
+                err.response.data.error.message,
+                this.$toastPosition
+              );
+              this.$router.push("/");
+            } else if (err.message) {
+              this.$toast.error("Scan", err.message, this.$toastPosition);
+              // this.$toast.info("Scan", "Trying again", this.$toastPosition);
+              // location.reload();
+            } else {
+              this.$toast.error(
+                "Scan",
+                "Something went wrong",
+                this.$toastPosition
+              );
+              this.$router.push("/");
+            }
+          });
       } else {
         this.$toast.info(
           "Scan",
@@ -109,6 +147,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+/* .sucBtn {
+  span.btn {
+    background-color: #4caf50;
+    color: #fff;
+  }
+} */
 form {
   width: 350px;
 }
